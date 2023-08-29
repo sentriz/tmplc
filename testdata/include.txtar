@@ -1,0 +1,28 @@
+exec tmplc header footer header a.tmpl b.tmpl
+cmp a 'a expected'
+cmp b 'b expected'
+
+-- header --
+{{ define "header" }}hi from header{{ end }}
+
+-- footer --
+{{ define "footer" }}hi from footer{{ end }}
+
+-- a.tmpl --
+{{ template "header" }}
+hi from A
+
+-- b.tmpl --
+{{ template "header" }}
+hi from B
+{{ template "footer" }}
+
+-- a expected --
+hi from header
+hi from A
+
+-- b expected --
+hi from header
+hi from B
+hi from footer
+

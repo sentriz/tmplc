@@ -1,0 +1,9 @@
+exec tmplc a.tmpl
+cmp a 'a expected'
+
+-- a.tmpl --
+hi from A
+
+-- a expected --
+hi from A
+

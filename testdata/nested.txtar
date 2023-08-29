@@ -1,0 +1,5 @@
+exec tmplc nested/a.tmpl
+cmp nested/a nested/a.tmpl
+
+-- nested/a.tmpl --
+hi from A

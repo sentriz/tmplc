@@ -1,0 +1,12 @@
+exec tmplc hi nested/a.tmpl
+cmp nested/a 'a expected'
+
+-- hi --
+{{ define "hi" }}hi{{ end }}
+
+-- nested/a.tmpl --
+{{ template "hi" }} from A
+
+-- a expected --
+hi from A
+

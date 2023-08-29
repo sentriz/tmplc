@@ -1,0 +1,23 @@
+! exec tmplc err.tmpl
+! exists err
+
+exec tmplc no-err.tmpl
+exists no-err
+
+! exec tmplc no-overwrite.tmpl
+cmp no-overwrite 'no-overwrite expected'
+
+-- err.tmpl --
+{{ template "missing" }}
+
+-- no-err.tmpl --
+hi
+
+-- no-overwrite --
+don't overwrite
+
+-- no-overwrite expected --
+don't overwrite
+
+-- no-overwrite.tmpl --
+{{ template "missing" }}

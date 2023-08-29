@@ -1,0 +1,21 @@
+exec tmplc partials page-a.tmpl page-b.tmpl
+cmp page-a 'page-a expected'
+cmp page-b 'page-b expected'
+
+-- partials --
+{{ define "layout" }}!! {{ template "content" }} !!{{ end }}
+
+-- page-a.tmpl --
+{{ define "content" }}page A{{ end }}
+{{- template "layout" }}
+
+-- page-b.tmpl --
+{{ define "content" }}page B{{ end }}
+{{- template "layout" }}
+
+-- page-a expected --
+!! page A !!
+
+-- page-b expected --
+!! page B !!
+

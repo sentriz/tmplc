@@ -1,0 +1,11 @@
+! exec tmplc missing.tmpl
+stderr 'template "wow" not defined'
+
+! exec tmplc syntax.tmpl
+stderr 'function "uh" not defined'
+
+-- missing.tmpl --
+{{ template "wow" }}
+
+-- syntax.tmpl --
+{{ uh
