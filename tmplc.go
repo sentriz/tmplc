@@ -30,17 +30,21 @@ func run(files []string) error {
 		}
 	}
 
-	var pool = sync.Pool{
-		New: func() any { return new(bytes.Buffer) },
+	var pool = sync.Pool{New: func() any { return new(bytes.Buffer) }}
+
+	var wg sync.WaitGroup
+	var leafErrs = make([]error, len(leaves))
+	for i := range leaves {
+		wg.Add(1)
+		go func(i int) {
+			defer wg.Done()
+			if err := processLeaf(&pool, leaves[i], partials); err != nil {
+				leafErrs[i] = fmt.Errorf("file %q: %w", leaves[i], err)
+			}
+		}(i)
 	}
 
-	var leafErrs []error
-	for _, name := range leaves {
-		if err := processLeaf(&pool, name, partials); err != nil {
-			leafErrs = append(leafErrs, fmt.Errorf("file %q: %w", name, err))
-			continue
-		}
-	}
+	wg.Wait()
 
 	return errors.Join(leafErrs...)
 }
