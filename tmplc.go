@@ -31,8 +31,8 @@ func run(files []string) error {
 	}
 
 	var pool = sync.Pool{New: func() any { return new(bytes.Buffer) }}
-
 	var wg sync.WaitGroup
+
 	var leafErrs = make([]error, len(leaves))
 	for i := range leaves {
 		wg.Add(1)
@@ -49,6 +49,15 @@ func run(files []string) error {
 	return errors.Join(leafErrs...)
 }
 
+var envMap = map[string]string{}
+
+func init() {
+	for _, env := range os.Environ() {
+		k, v, _ := strings.Cut(env, "=")
+		envMap[k] = v
+	}
+}
+
 func processLeaf(pool *sync.Pool, name string, partials []string) error {
 	var toParse []string
 	toParse = append(toParse, name)        // the leaf should be the first defined, main template
@@ -63,7 +72,7 @@ func processLeaf(pool *sync.Pool, name string, partials []string) error {
 	defer pool.Put(buff)
 	buff.Reset()
 
-	if err := t.Execute(buff, nil); err != nil {
+	if err := t.Execute(buff, envMap); err != nil {
 		return fmt.Errorf("executing template: %v", err)
 	}
 
