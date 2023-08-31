@@ -1,0 +1,27 @@
+exec tmplc partials post post.html.tmpl
+exec tmplc partials home.html.tmpl
+
+cmp post.html 'post.html expected'
+cmp home.html 'home.html expected'
+
+-- partials --
+{{- define "layout" }}<html>{{ template "content" }}</html>{{ end }}
+
+-- post --
+{{- define "content" }}<h1>post title: {{ template "post_title" }}</h1> {{ template "post_content" }}{{ end }}
+
+-- post.html.tmpl --
+{{- define "post_title" }}post!{{ end }}
+{{- define "post_content" }}<p>content!</p>{{ end }}
+{{- template "layout" }}
+
+-- home.html.tmpl --
+{{- define "content" }}<p>home!</p>{{ end }}
+{{- template "layout" }}
+
+-- post.html expected --
+<html><h1>post title: post!</h1> <p>content!</p></html>
+
+-- home.html expected --
+<html><p>home!</p></html>
+
